@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class MoneyBagController {
 
-    @PostMapping("test")
+        // For testing purposes
+    @GetMapping("test")
     public String test() {
-        return "Can you see me? But can u see me?";
+        return "Can you see me? But can u see me? I can see u, can u see me now?";
     }
-
+        // localhost:8082/MoneyBag/test
 }
