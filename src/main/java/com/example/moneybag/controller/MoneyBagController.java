@@ -10,7 +10,7 @@ public class MoneyBagController {
 
     @PostMapping("test")
     public String test() {
-        return "Can you see me?";
+        return "Can you see me? But can u see me?";
     }
 
 }
