@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RequestMapping("MoneyBag")
-@Controller
+@RestController
 public class MoneyBagController {
 
         // For testing purposes
