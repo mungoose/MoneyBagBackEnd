@@ -14,6 +14,6 @@ public class MoneyBagService {
     private MoneyBagRepository moneyBagRepository;
 
     public List<Test2> getName(int i){
-        return moneyBagRepository.getname(i);
+        return moneyBagRepository.getName(i);
     }
 }

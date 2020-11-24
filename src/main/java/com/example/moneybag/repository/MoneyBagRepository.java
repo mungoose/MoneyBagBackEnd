@@ -16,7 +16,7 @@ public class MoneyBagRepository {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<Test2> getname(int i){
+    public List<Test2> getName(int i){
         String sql = "SELECT * FROM test2";
         Map nameMap = new HashMap<>();
         return jdbcTemplate.query(sql, nameMap, new NameRowMapper());
