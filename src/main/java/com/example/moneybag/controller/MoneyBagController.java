@@ -3,6 +3,7 @@ package com.example.moneybag.controller;
 import com.example.moneybag.classes.Client;
 import com.example.moneybag.classes.Group;
 import com.example.moneybag.classes.Transaction;
+import com.example.moneybag.classes.TransactionAddRequest;
 import com.example.moneybag.service.MoneyBagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -56,28 +57,27 @@ public class MoneyBagController {
                                                             // localhost:8083/MoneyBag/getGroupNameByCode?code=1
 
     // Add transaction money in
-    @CrossOrigin
+/*    @CrossOrigin
     @PutMapping("addTransactionMoneyIn")
-    public void addTransactionMoneyIn(@RequestBody Transaction transaction, int id){
-        moneyBagService.addTransactionMoneyIn(transaction, id);
-    }
+    public Integer addTransactionMoneyIn(@RequestBody Transaction transaction, int id){
+        return moneyBagService.addTransactionMoneyIn(transaction, id);
+    }*/
                                                             // localhost:8083/MoneyBag/addTransactionMoneyIn?id=1 + body
-
-    // Add transaction money out
-    @CrossOrigin
-    @PutMapping("addTransactionMoneyOut")
-    public void addTransactionMoneyOut(@RequestBody Transaction transaction, int id){
-        moneyBagService.addTransactionMoneyOut(transaction, id);
-    }
-                                                            // localhost:8083/MoneyBag/addTransactionMoneyOut?id=1 + body
 
     // Add transaction money out with auto-key
     @CrossOrigin
-    @PutMapping("addTransactionMoneyOutKey")
-    public Integer addTransactionMoneyOutKey(@RequestBody Transaction transaction, int id){
-        return moneyBagService.addTransactionMoneyOutKeyHolder(transaction, id);
+    @PutMapping("addTransactionMoneyOut")
+    public Integer addTransactionMoneyOut(@RequestBody Transaction transaction, int id){
+        return moneyBagService.addTransactionMoneyOut(transaction, id);
     }
-                                                            // localhost:8083/MoneyBag/addTransactionMoneyOutKey?id=1 + body
+                                                            // localhost:8083/MoneyBag/addTransactionMoneyOut?id=1 + body
 
-    // Add
+    // Add transaction and transaction line simultaneously
+    @CrossOrigin
+    @PostMapping("addTransactionCombined")
+    public void addTransactionCombined(@RequestBody TransactionAddRequest transactionAddRequest, int id){
+        moneyBagService.addTransactionCombined(transactionAddRequest, id);
+    }
+                                                            // localhost:8083/MoneyBag/addTransactionCombined + body
+
 }
