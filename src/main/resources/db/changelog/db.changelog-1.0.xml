@@ -16,6 +16,9 @@
             <column name="last_name" type="text">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
+            <column name="balance" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="groups">
@@ -50,10 +53,13 @@
             <column name="payee" type="text">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="in" type="numeric">
+            <column name="money_in" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="out" type="numeric">
+            <column name="money_out" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="end_balance" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="locked" type="boolean">
@@ -70,10 +76,10 @@
                              references="transactions(id)"
                              primaryKey="false" unique="false"/>
             </column>
-            <column name="in" type="numeric">
+            <column name="money_in" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="out" type="numeric">
+            <column name="money_out" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="group_code" type="integer">
