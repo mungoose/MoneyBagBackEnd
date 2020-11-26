@@ -2,7 +2,6 @@ package com.example.moneybag.controller;
 
 import com.example.moneybag.classes.Client;
 import com.example.moneybag.classes.Group;
-import com.example.moneybag.classes.Transaction;
 import com.example.moneybag.classes.TransactionAddRequest;
 import com.example.moneybag.service.MoneyBagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,28 +55,13 @@ public class MoneyBagController {
     }
                                                             // localhost:8083/MoneyBag/getGroupNameByCode?code=1
 
-    // Add transaction money in
-/*    @CrossOrigin
-    @PutMapping("addTransactionMoneyIn")
-    public Integer addTransactionMoneyIn(@RequestBody Transaction transaction, int id){
-        return moneyBagService.addTransactionMoneyIn(transaction, id);
-    }*/
-                                                            // localhost:8083/MoneyBag/addTransactionMoneyIn?id=1 + body
-
-    // Add transaction money out with auto-key
-    @CrossOrigin
-    @PutMapping("addTransactionMoneyOut")
-    public Integer addTransactionMoneyOut(@RequestBody Transaction transaction, int id){
-        return moneyBagService.addTransactionMoneyOut(transaction, id);
-    }
-                                                            // localhost:8083/MoneyBag/addTransactionMoneyOut?id=1 + body
 
     // Add transaction and transaction line simultaneously
     @CrossOrigin
-    @PostMapping("addTransactionCombined")
+    @PostMapping("addTransaction")
     public void addTransactionCombined(@RequestBody TransactionAddRequest transactionAddRequest, int id){
         moneyBagService.addTransactionCombined(transactionAddRequest, id);
     }
-                                                            // localhost:8083/MoneyBag/addTransactionCombined + body
+                                                            // localhost:8083/MoneyBag/addTransaction + body
 
 }

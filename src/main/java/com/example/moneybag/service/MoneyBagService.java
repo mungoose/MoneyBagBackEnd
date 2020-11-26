@@ -38,13 +38,6 @@ public class MoneyBagService {
         return clientsRepository.getBalanceById(id);
     }
 
-    // Update balance by id
-    public void updateBalanceById(int id, BigDecimal moneyIn) {
-        BigDecimal balance = clientsRepository.getBalanceById(id);
-        balance = balance.add(moneyIn);
-        clientsRepository.updateBalanceById(id, balance);
-    }
-
     // Add group by providing client id, code nr and name for the group
     public void addGroup(Group group) {
         groupsRepository.addGroup(group);
@@ -55,39 +48,41 @@ public class MoneyBagService {
         return groupsRepository.getGroupNameByCode(code);
     }
 
-    // Add transaction money in, update balance in clients table
-/*    public Integer addTransactionMoneyIn(Transaction transaction, int id) {
-        BigDecimal currentBalance = getBalanceById(id);
-        BigDecimal newBalance = transaction.getMoneyIn().add(currentBalance);
-        clientsRepository.updateBalanceById(id, newBalance);
-        return transactionRepository.addTransactionMoneyIn(transaction, newBalance, id);
-
-    }*/
-
-    // Add transaction money out, update balance in clients table
-    public Integer addTransactionMoneyOut(Transaction transaction, int id) {
-        BigDecimal currentBalance = getBalanceById(id);
-        BigDecimal newBalance = currentBalance.subtract(transaction.getMoneyOut());
-        clientsRepository.updateBalanceById(id, newBalance);
-        return transactionRepository.addTransactionMoneyOut(transaction, newBalance, id);
-
-    }
 
     // Add transaction and transaction line simultaneously
     public void addTransactionCombined(TransactionAddRequest transactionAddRequest, int clientId) {
+
+        // Create an empty transaction to create a transaction id
         int transactionId = transactionRepository.createInitialTransaction(clientId);
 
-//        int transactionId = 1;      // TODO: should come from addTransactionMoneyIn's return
+        // Initialize the balance of transaction lines
         BigDecimal groupBalance = BigDecimal.ZERO;
 
+        // Get current balance
         BigDecimal currentBalance = getBalanceById(clientId);
 
+        // Get transaction lines from Json body
         List<TransactionLineAddRequest> thisList = transactionAddRequest.getTransactionLines();
+        // Loop through lines
         for (int i = 0; i < thisList.size(); i++) {
-
+            // Get group code
             int groupCode = transactionAddRequest.getTransactionLines().get(i).getGroupCode();
+            // Get money amount
             BigDecimal moneyIn = transactionAddRequest.getTransactionLines().get(i).getMoneyIn();
             BigDecimal moneyOut = transactionAddRequest.getTransactionLines().get(i).getMoneyOut();
+
+            // Initialize transaction line sum in and sum out
+            BigDecimal moneyLineIn = BigDecimal.ZERO;
+            BigDecimal moneyLineOut = BigDecimal.ZERO;
+
+            // Decide to add transaction line sum to sum in or sum out
+            if (moneyIn != null){
+                moneyLineIn = moneyIn;
+            } else {
+                moneyLineOut = moneyOut;
+            }
+            // Add transaction line to transaction_lines table
+            transactionLineRepository.addTransactionLine(transactionId, moneyLineIn, moneyLineOut, groupCode);
 
             if (moneyIn != null) {
                 groupBalance = groupBalance.add(moneyIn);
@@ -95,11 +90,26 @@ public class MoneyBagService {
                 groupBalance = groupBalance.subtract(moneyOut);
 
             }
-            transactionLineRepository.addTransactionLineMoneyIn(transactionId, moneyIn, groupCode);
         }
-        BigDecimal transactionSum = currentBalance.add(groupBalance);
-        transactionRepository.addTransactionMoneyIn2
-                (transactionAddRequest.getDate(), transactionAddRequest.getPayee(), groupBalance, clientId, transactionSum, transactionId);
+        // Calculate new balance
+        BigDecimal newBalance = currentBalance.add(groupBalance);
 
+        // Update balance in clients table
+        clientsRepository.updateBalanceById(clientId, newBalance);
+
+        // Initialize sum in and sum out
+        BigDecimal transactionSumIn = BigDecimal.ZERO;
+        BigDecimal transactionSumOut = BigDecimal.ZERO;
+
+        // Decide to add transaction sum to sum in or sum out
+        if (groupBalance.compareTo(BigDecimal.ZERO) > 0) {
+            transactionSumIn = groupBalance;
+        } else {
+            transactionSumOut = groupBalance;
+        }
+        // Update created transaction line
+        transactionRepository.addTransaction
+                (clientId, transactionAddRequest.getDate(), transactionAddRequest.getPayee(),
+                        transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
     }
 }

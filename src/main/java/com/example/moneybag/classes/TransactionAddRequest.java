@@ -3,19 +3,19 @@ package com.example.moneybag.classes;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransactionAddRequest {
-    private LocalDate date;
+    private LocalDateTime date;
     private String payee;
-
     private List<TransactionLineAddRequest> transactionLines;
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
