@@ -1,9 +1,13 @@
 package com.example.moneybag.classes;
 
-public class Test2 {
+import java.math.BigDecimal;
+
+public class Client {
+
     private int id;
     private String firstName;
     private String lastName;
+    private BigDecimal balance;
 
     public int getId() {
         return id;
@@ -27,5 +31,13 @@ public class Test2 {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }
