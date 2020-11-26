@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MoneyBagService {
@@ -46,6 +47,11 @@ public class MoneyBagService {
     // Get group name by group code
     public String getGroupNameByCode(int code) {
         return groupsRepository.getGroupNameByCode(code);
+    }
+
+    // Get all client group names by client id
+    public List<Group> getAllGroupNamesByClientId(int clientid) {
+        return groupsRepository.getAllGroupNamesByClientId(clientid);
     }
 
 
@@ -111,5 +117,14 @@ public class MoneyBagService {
         transactionRepository.addTransaction
                 (clientId, transactionAddRequest.getDate(), transactionAddRequest.getPayee(),
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
+    }
+
+    public Object oneClientAllIncome(int clientid) {
+        List<Map<String, Object>> allMoneyIn =transactionRepository.oneClientAllIncome(clientid);
+        System.out.println(allMoneyIn);
+        for (int i = 0; i<allMoneyIn.size(); i++) {
+        }
+        return allMoneyIn;
+
     }
 }

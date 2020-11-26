@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @RequestMapping("MoneyBag")                                 // localhost:8083/
@@ -53,7 +54,15 @@ public class MoneyBagController {
     public String getGroupNameByCode(int code){
         return moneyBagService.getGroupNameByCode(code);
     }
-                                                            // localhost:8083/MoneyBag/getGroupNameByCode?code=1
+                                                            // localhost:8083/MoneyBag/getGroupNameByCode?code=1// Get group name by group code
+
+    // Get client all group names by client id
+    @CrossOrigin
+    @GetMapping("getAllGroupNamesByClientId")
+    public List<Group> getAllGroupNamesByClientId(int clientid){
+        return moneyBagService.getAllGroupNamesByClientId(clientid);
+    }
+                                                            // localhost:8083/MoneyBag/getAllGroupNamesByClientId?clientid=1
 
 
     // Add transaction and transaction line simultaneously
@@ -63,5 +72,13 @@ public class MoneyBagController {
         moneyBagService.addTransactionCombined(transactionAddRequest, id);
     }
                                                             // localhost:8083/MoneyBag/addTransaction + body
+
+    //Get all income, one client
+    @CrossOrigin
+    @GetMapping("oneClientAllIncome")
+    public Object oneClientAllIncome(int clientid){
+        return moneyBagService.oneClientAllIncome(clientid);
+    }
+
 
 }
