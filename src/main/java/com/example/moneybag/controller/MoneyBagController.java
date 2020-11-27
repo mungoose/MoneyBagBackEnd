@@ -2,12 +2,14 @@ package com.example.moneybag.controller;
 
 import com.example.moneybag.classes.Client;
 import com.example.moneybag.classes.Group;
+import com.example.moneybag.classes.Planner;
 import com.example.moneybag.classes.TransactionAddRequest;
 import com.example.moneybag.service.MoneyBagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @RequestMapping("MoneyBag")                                 // localhost:8083/
@@ -64,4 +66,11 @@ public class MoneyBagController {
     }
                                                             // localhost:8083/MoneyBag/addTransaction + body
 
+    // Get planner by id
+    @CrossOrigin
+    @GetMapping("getPlannerById")
+    public List<Planner> getPlannerById(int id){
+        return moneyBagService.getPlannerById(id);
+    }
+                                                            // localhost:8083/MoneyBag/getPlannerById?id=1
 }

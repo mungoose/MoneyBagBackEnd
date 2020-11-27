@@ -1,10 +1,7 @@
 package com.example.moneybag.service;
 
 import com.example.moneybag.classes.*;
-import com.example.moneybag.repository.ClientsRepository;
-import com.example.moneybag.repository.GroupsRepository;
-import com.example.moneybag.repository.TransactionLineRepository;
-import com.example.moneybag.repository.TransactionRepository;
+import com.example.moneybag.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +19,8 @@ public class MoneyBagService {
     private TransactionRepository transactionRepository;
     @Autowired
     private TransactionLineRepository transactionLineRepository;
+    @Autowired
+    private PlannerRepository plannerRepository;
 
     // Add client
     public void addClient(Client client) {
@@ -111,5 +110,10 @@ public class MoneyBagService {
         transactionRepository.addTransaction
                 (clientId, transactionAddRequest.getDate(), transactionAddRequest.getPayee(),
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
+    }
+
+    // Get planner by id
+    public List<Planner> getPlannerById(int id){
+        return plannerRepository.getPlannerById(id);
     }
 }
