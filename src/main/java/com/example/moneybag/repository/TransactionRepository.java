@@ -67,12 +67,19 @@ public class TransactionRepository {
     }
 
     // Get one client all income
-    public List<Map<String, Object>> oneClientAllIncome (int clientid) {
+    public List<BigDecimal> oneClientAllIncome (int clientid) {
         String sql = "SELECT money_in FROM transactions WHERE client_id=(:value)";
         Map<String, Object> moneyinMap= new HashMap<>();
         moneyinMap.put("value", clientid);
-        List<Map<String, Object>> moneyInList = jdbcTemplate.queryForList(sql, moneyinMap);
-        return moneyInList;
+        return jdbcTemplate.queryForList(sql, moneyinMap, BigDecimal.class);
+    }
+
+    // Get one client all outcome
+    public List<BigDecimal> oneClientAllCosts (int clientid) {
+        String sql = "SELECT money_out FROM transactions WHERE client_id=(:value)";
+        Map<String, Object> moneyoutMap= new HashMap<>();
+        moneyoutMap.put("value", clientid);
+        return jdbcTemplate.queryForList(sql, moneyoutMap, BigDecimal.class);
     }
 
 

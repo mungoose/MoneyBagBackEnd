@@ -1,6 +1,7 @@
 package com.example.moneybag.controller;
 
 import com.example.moneybag.classes.Client;
+import com.example.moneybag.classes.GoalSetter;
 import com.example.moneybag.classes.Group;
 import com.example.moneybag.classes.TransactionAddRequest;
 import com.example.moneybag.service.MoneyBagService;
@@ -68,17 +69,54 @@ public class MoneyBagController {
     // Add transaction and transaction line simultaneously
     @CrossOrigin
     @PostMapping("addTransaction")
-    public void addTransactionCombined(@RequestBody TransactionAddRequest transactionAddRequest, int id){
-        moneyBagService.addTransactionCombined(transactionAddRequest, id);
+    public void addTransactionCombined(@RequestBody TransactionAddRequest transactionAddRequest, int clientid){
+        moneyBagService.addTransactionCombined(transactionAddRequest, clientid);
     }
                                                             // localhost:8083/MoneyBag/addTransaction + body
 
     //Get all income, one client
     @CrossOrigin
     @GetMapping("oneClientAllIncome")
-    public Object oneClientAllIncome(int clientid){
+    public BigDecimal oneClientAllIncome(int clientid){
         return moneyBagService.oneClientAllIncome(clientid);
     }
+
+    //Get all expenses, one client
+    @CrossOrigin
+    @GetMapping("oneClientAllCosts")
+    public BigDecimal oneClientAllCosts (int clientid){
+        return moneyBagService.oneClientAllCosts(clientid);
+    }
+
+    //Get all income, one group, one client
+    @CrossOrigin
+    @GetMapping("oneClientAllIncomebyGroup")
+    public BigDecimal oneClientAllIncome(int groupcode, int clientid){
+        return moneyBagService.getGruopSumIN(groupcode, clientid);
+    }
+
+    //Get all expenses, one group, one client
+    @CrossOrigin
+    @GetMapping("oneClientAllCostsbyGroup")
+    public BigDecimal oneClientAllCosts (int groupcode, int clientid){
+        return moneyBagService.getGruopSumOUT(groupcode, clientid);
+    }
+
+    //Create new goal for a group
+    @CrossOrigin
+    @PostMapping("addMaxGoal")
+    public void addGoal(@RequestBody GoalSetter goalSetter){
+        moneyBagService.addGoal(goalSetter);
+    }
+
+    //Change goal for a group
+    @CrossOrigin
+    @PostMapping("changeMaxGoal")
+    public void changeGoal (@RequestBody GoalSetter goalSetter){
+        moneyBagService.changeGoal(goalSetter);
+    }
+
+
 
 
 }
