@@ -3,6 +3,7 @@ package com.example.moneybag.controller;
 import com.example.moneybag.classes.Client;
 import com.example.moneybag.classes.GoalSetter;
 import com.example.moneybag.classes.Group;
+import com.example.moneybag.classes.Planner;
 import com.example.moneybag.classes.TransactionAddRequest;
 import com.example.moneybag.service.MoneyBagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class MoneyBagController {
     }
                                                             // localhost:8083/MoneyBag/addTransaction + body
 
+<<<<<<< HEAD
     //Get all income, one client
     @CrossOrigin
     @GetMapping("oneClientAllIncome")
@@ -119,4 +121,13 @@ public class MoneyBagController {
 
 
 
+=======
+    // Get planner by id
+    @CrossOrigin
+    @GetMapping("getPlannerById")
+    public List<Planner> getPlannerById(int id){
+        return moneyBagService.getPlannerById(id);
+    }
+                                                            // localhost:8083/MoneyBag/getPlannerById?id=1
+>>>>>>> working_tree
 }

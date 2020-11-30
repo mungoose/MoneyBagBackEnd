@@ -23,7 +23,11 @@ public class MoneyBagService {
     @Autowired
     private TransactionLineRepository transactionLineRepository;
     @Autowired
+<<<<<<< HEAD
     private GoalSetterRepository goalSetterRepository;
+=======
+    private PlannerRepository plannerRepository;
+>>>>>>> working_tree
 
     // Add client
     public void addClient(Client client) {
@@ -120,6 +124,7 @@ public class MoneyBagService {
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
     }
 
+<<<<<<< HEAD
     public BigDecimal oneClientAllIncome(int clientid) {
         List<BigDecimal> allMoneyIn =transactionRepository.oneClientAllIncome(clientid);
         System.out.println(allMoneyIn.get(1));
@@ -173,5 +178,10 @@ public class MoneyBagService {
     // change group goal
     public void changeGoal (GoalSetter goalSetter) {
         goalSetterRepository.changeGoal(goalSetter);
+=======
+    // Get planner by id
+    public List<Planner> getPlannerById(int id){
+        return plannerRepository.getPlannerById(id);
+>>>>>>> working_tree
     }
 }
