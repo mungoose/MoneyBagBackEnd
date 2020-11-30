@@ -111,5 +111,31 @@
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
         </createTable>
+
+        <createTable tableName="planner">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="client_id" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_clients_planner"
+                             references="clients(id)"
+                             primaryKey="false" unique="false"/>
+            </column>
+            <column name="month_year" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="group" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="planned" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="actual" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="free" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

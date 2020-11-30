@@ -75,7 +75,6 @@ public class MoneyBagController {
     }
                                                             // localhost:8083/MoneyBag/addTransaction + body
 
-<<<<<<< HEAD
     //Get all income, one client
     @CrossOrigin
     @GetMapping("oneClientAllIncome")
@@ -121,7 +120,6 @@ public class MoneyBagController {
 
 
 
-=======
     // Get planner by id
     @CrossOrigin
     @GetMapping("getPlannerById")
@@ -129,5 +127,4 @@ public class MoneyBagController {
         return moneyBagService.getPlannerById(id);
     }
                                                             // localhost:8083/MoneyBag/getPlannerById?id=1
->>>>>>> working_tree
 }

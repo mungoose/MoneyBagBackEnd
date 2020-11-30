@@ -23,11 +23,9 @@ public class MoneyBagService {
     @Autowired
     private TransactionLineRepository transactionLineRepository;
     @Autowired
-<<<<<<< HEAD
     private GoalSetterRepository goalSetterRepository;
-=======
+    @Autowired
     private PlannerRepository plannerRepository;
->>>>>>> working_tree
 
     // Add client
     public void addClient(Client client) {
@@ -87,7 +85,7 @@ public class MoneyBagService {
             BigDecimal moneyLineOut = BigDecimal.ZERO;
 
             // Decide to add transaction line sum to sum in or sum out
-            if (moneyIn != null){
+            if (moneyIn != null) {
                 moneyLineIn = moneyIn;
             } else {
                 moneyLineOut = moneyOut;
@@ -124,47 +122,46 @@ public class MoneyBagService {
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
     }
 
-<<<<<<< HEAD
     public BigDecimal oneClientAllIncome(int clientid) {
-        List<BigDecimal> allMoneyIn =transactionRepository.oneClientAllIncome(clientid);
+        List<BigDecimal> allMoneyIn = transactionRepository.oneClientAllIncome(clientid);
         System.out.println(allMoneyIn.get(1));
         BigDecimal sum = new BigDecimal(0);
         BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i<allMoneyIn.size(); i++) {
-            num=allMoneyIn.get(i);
+        for (int i = 0; i < allMoneyIn.size(); i++) {
+            num = allMoneyIn.get(i);
             sum = sum.add(num);
         }
         return sum;
     }
 
-    public BigDecimal oneClientAllCosts (int clientid) {
-        List<BigDecimal> allMoneyOut =transactionRepository.oneClientAllCosts(clientid);
+    public BigDecimal oneClientAllCosts(int clientid) {
+        List<BigDecimal> allMoneyOut = transactionRepository.oneClientAllCosts(clientid);
         BigDecimal sum = new BigDecimal(0);
         BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i<allMoneyOut.size(); i++) {
-            num=allMoneyOut.get(i);
+        for (int i = 0; i < allMoneyOut.size(); i++) {
+            num = allMoneyOut.get(i);
             sum = sum.add(num);
         }
         return sum;
     }
 
-    public BigDecimal getGruopSumOUT (int groupCode, int clientid) {
-        List<BigDecimal> allMoneyOut =transactionLineRepository.getGroupSumOUT(groupCode, clientid);
+    public BigDecimal getGruopSumOUT(int groupCode, int clientid) {
+        List<BigDecimal> allMoneyOut = transactionLineRepository.getGroupSumOUT(groupCode, clientid);
         BigDecimal sum = new BigDecimal(0);
         BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i<allMoneyOut.size(); i++) {
-            num=allMoneyOut.get(i);
+        for (int i = 0; i < allMoneyOut.size(); i++) {
+            num = allMoneyOut.get(i);
             sum = sum.add(num);
         }
         return sum;
     }
 
-    public BigDecimal getGruopSumIN (int groupCode, int clientid) {
-        List<BigDecimal> allMoneyIn =transactionLineRepository.getGroupSumIN(groupCode, clientid);
+    public BigDecimal getGruopSumIN(int groupCode, int clientid) {
+        List<BigDecimal> allMoneyIn = transactionLineRepository.getGroupSumIN(groupCode, clientid);
         BigDecimal sum = new BigDecimal(0);
         BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i<allMoneyIn.size(); i++) {
-            num=allMoneyIn.get(i);
+        for (int i = 0; i < allMoneyIn.size(); i++) {
+            num = allMoneyIn.get(i);
             sum = sum.add(num);
         }
         return sum;
@@ -176,12 +173,12 @@ public class MoneyBagService {
     }
 
     // change group goal
-    public void changeGoal (GoalSetter goalSetter) {
+    public void changeGoal(GoalSetter goalSetter) {
         goalSetterRepository.changeGoal(goalSetter);
-=======
+    }
+
     // Get planner by id
-    public List<Planner> getPlannerById(int id){
+    public List<Planner> getPlannerById(int id) {
         return plannerRepository.getPlannerById(id);
->>>>>>> working_tree
     }
 }
