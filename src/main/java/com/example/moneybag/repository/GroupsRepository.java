@@ -1,11 +1,13 @@
 package com.example.moneybag.repository;
 
 import com.example.moneybag.classes.Group;
+import com.example.moneybag.rowmapper.GroupRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -32,5 +34,13 @@ public class GroupsRepository {
         return jdbcTemplate.queryForObject(sql, groupMap, String.class);
     }
 
+    // Get all client group names by client id
+    public List<Group> getAllGroupNamesByClientId(int ClientId){
+        String sql = "SELECT * FROM groups WHERE client_id = (:value4)";
+        Map<String, Object> groupMap = new HashMap<>();
+        groupMap.put("value4", ClientId);
+        List<Group> groupnamelist = jdbcTemplate.query(sql, groupMap, new GroupRowMapper());
+        return groupnamelist;
+    }
 
 }

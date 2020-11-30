@@ -1,15 +1,15 @@
 package com.example.moneybag.service;
 
 import com.example.moneybag.classes.*;
-import com.example.moneybag.repository.ClientsRepository;
-import com.example.moneybag.repository.GroupsRepository;
-import com.example.moneybag.repository.TransactionLineRepository;
-import com.example.moneybag.repository.TransactionRepository;
+import com.example.moneybag.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MoneyBagService {
@@ -22,6 +22,8 @@ public class MoneyBagService {
     private TransactionRepository transactionRepository;
     @Autowired
     private TransactionLineRepository transactionLineRepository;
+    @Autowired
+    private GoalSetterRepository goalSetterRepository;
 
     // Add client
     public void addClient(Client client) {
@@ -46,6 +48,11 @@ public class MoneyBagService {
     // Get group name by group code
     public String getGroupNameByCode(int code) {
         return groupsRepository.getGroupNameByCode(code);
+    }
+
+    // Get all client group names by client id
+    public List<Group> getAllGroupNamesByClientId(int clientid) {
+        return groupsRepository.getAllGroupNamesByClientId(clientid);
     }
 
 
@@ -82,7 +89,7 @@ public class MoneyBagService {
                 moneyLineOut = moneyOut;
             }
             // Add transaction line to transaction_lines table
-            transactionLineRepository.addTransactionLine(transactionId, moneyLineIn, moneyLineOut, groupCode);
+            transactionLineRepository.addTransactionLine(transactionId, moneyLineIn, moneyLineOut, groupCode, clientId);
 
             if (moneyIn != null) {
                 groupBalance = groupBalance.add(moneyIn);
@@ -111,5 +118,60 @@ public class MoneyBagService {
         transactionRepository.addTransaction
                 (clientId, transactionAddRequest.getDate(), transactionAddRequest.getPayee(),
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
+    }
+
+    public BigDecimal oneClientAllIncome(int clientid) {
+        List<BigDecimal> allMoneyIn =transactionRepository.oneClientAllIncome(clientid);
+        System.out.println(allMoneyIn.get(1));
+        BigDecimal sum = new BigDecimal(0);
+        BigDecimal num = new BigDecimal(0);
+        for (int i = 0; i<allMoneyIn.size(); i++) {
+            num=allMoneyIn.get(i);
+            sum = sum.add(num);
+        }
+        return sum;
+    }
+
+    public BigDecimal oneClientAllCosts (int clientid) {
+        List<BigDecimal> allMoneyOut =transactionRepository.oneClientAllCosts(clientid);
+        BigDecimal sum = new BigDecimal(0);
+        BigDecimal num = new BigDecimal(0);
+        for (int i = 0; i<allMoneyOut.size(); i++) {
+            num=allMoneyOut.get(i);
+            sum = sum.add(num);
+        }
+        return sum;
+    }
+
+    public BigDecimal getGruopSumOUT (int groupCode, int clientid) {
+        List<BigDecimal> allMoneyOut =transactionLineRepository.getGroupSumOUT(groupCode, clientid);
+        BigDecimal sum = new BigDecimal(0);
+        BigDecimal num = new BigDecimal(0);
+        for (int i = 0; i<allMoneyOut.size(); i++) {
+            num=allMoneyOut.get(i);
+            sum = sum.add(num);
+        }
+        return sum;
+    }
+
+    public BigDecimal getGruopSumIN (int groupCode, int clientid) {
+        List<BigDecimal> allMoneyIn =transactionLineRepository.getGroupSumIN(groupCode, clientid);
+        BigDecimal sum = new BigDecimal(0);
+        BigDecimal num = new BigDecimal(0);
+        for (int i = 0; i<allMoneyIn.size(); i++) {
+            num=allMoneyIn.get(i);
+            sum = sum.add(num);
+        }
+        return sum;
+    }
+
+    // Add group goal
+    public void addGoal(GoalSetter goalSetter) {
+        goalSetterRepository.addGoal(goalSetter);
+    }
+
+    // change group goal
+    public void changeGoal (GoalSetter goalSetter) {
+        goalSetterRepository.changeGoal(goalSetter);
     }
 }

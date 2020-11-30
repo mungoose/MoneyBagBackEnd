@@ -47,7 +47,7 @@
                              references="clients(id)"
                              primaryKey="false" unique="false"/>
             </column>
-            <column name="date" type="timestamp">
+            <column name="date" type="date">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
             </column>
             <column name="payee" type="text">
@@ -76,6 +76,11 @@
                              references="transactions(id)"
                              primaryKey="false" unique="false"/>
             </column>
+            <column name="client_id" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_clients_transactions"
+                             references="clients(id)"
+                             primaryKey="false" unique="false"/>
+            </column>
             <column name="money_in" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
@@ -86,6 +91,24 @@
                 <constraints nullable="false" foreignKeyName="fk_groups_transaction_lines"
                              references="groups(group_code)"
                              primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="goal_setter">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="client_id" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_clients_transactions"
+                             references="clients(id)"
+                             primaryKey="false" unique="false"/>
+            </column>
+            <column name="group_code" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_groups_transaction_lines"
+                             references="groups(group_code)"
+                             primaryKey="false" unique="false"/>
+            </column>
+            <column name="max_goal" type="numeric">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
         </createTable>
     </changeSet>
