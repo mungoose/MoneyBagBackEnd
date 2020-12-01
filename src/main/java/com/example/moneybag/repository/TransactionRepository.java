@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class TransactionRepository {
 
     // Update transaction money in, set money_out to zero
     public Integer addTransaction
-    (int clientId, LocalDateTime date, String payee, BigDecimal transactionSumIn, BigDecimal transactionSumOut,
+    (int clientId, LocalDate date, String payee, BigDecimal transactionSumIn, BigDecimal transactionSumOut,
      BigDecimal newBalance, int id) {
 
         String sql = "UPDATE transactions SET (client_id, date, payee, money_in, money_out, end_balance, locked) = " +

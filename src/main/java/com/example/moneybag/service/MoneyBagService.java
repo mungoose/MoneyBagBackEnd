@@ -1,15 +1,18 @@
 package com.example.moneybag.service;
 
+import antlr.StringUtils;
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 @Service
 public class MoneyBagService {
@@ -53,12 +56,13 @@ public class MoneyBagService {
     }
 
     // Get all client group names by client id
-    public List<Group> getAllGroupNamesByClientId(int clientid) {
-        return groupsRepository.getAllGroupNamesByClientId(clientid);
+    public List<String> getAllGroupNamesByClientId(int clientId) {
+        return plannerRepository.getAllGroupNamesByClientId(clientId);
     }
 
 
     // Add transaction and transaction line simultaneously
+    @Transactional         // If something brakes in the middle of this function, roll back
     public void addTransactionCombined(TransactionAddRequest transactionAddRequest, int clientId) {
 
         // Create an empty transaction to create a transaction id
@@ -181,4 +185,34 @@ public class MoneyBagService {
     public List<Planner> getPlannerById(int id) {
         return plannerRepository.getPlannerById(id);
     }
+
+    // Insert default planner lines
+    public void insertDefaultPlannerById(int clientId) {
+        // Create correct date format
+        Date date = new Date();
+        SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
+        String monthYear = formatDate.format(date);
+        monthYear = monthYear.substring(0,1).toUpperCase() + monthYear.substring(1).toLowerCase();
+        int groupCode = 1;
+        List<String> defaultNames = Arrays.asList("Sissetulek", "Toit", "Väljas söömine", "Kodutarbed", "Kodulaen/üür", "Kindlustus",
+                "Telekommunikatsioon", "Transport", "Meelelahutus", "Tervis", "Säästmine");
+        for (int i = 0; i < defaultNames.size(); i++) {
+            groupCode = i + 1;
+            String groupName = defaultNames.get(i);
+            plannerRepository.insertDefaultPlannerById(clientId, monthYear, groupCode, groupName);
+        }
+    }
+
+    // Update planner by id
+    @Transactional
+    public void updatePlannerById(PlannerCreator plannerCreator) {
+        int clientId = plannerCreator.getPlannerCreatorList().get(1).getClientId();
+        plannerRepository.deletePlannerByID(clientId);
+        List<Planner> plannerList = plannerCreator.getPlannerCreatorList();
+        for (int i = 0; i < plannerList.size(); i++) {
+            Planner planner = plannerList.get(i);
+            plannerRepository.insertPlannerById(planner);
+        }
+    }
+
 }
