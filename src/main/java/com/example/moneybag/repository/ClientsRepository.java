@@ -27,11 +27,11 @@ public class ClientsRepository {
     }
 
     // Update balance by id
-    public void updateBalanceById(int id, BigDecimal balance){
+    public void updateBalanceById(int clientId, BigDecimal balance){
         String sql = "UPDATE clients SET balance = (:value1) WHERE id = (:value2)";
         Map<String, Object> clientMap = new HashMap<>();
         clientMap.put("value1", balance);
-        clientMap.put("value2", id);
+        clientMap.put("value2", clientId);
         jdbcTemplate.update(sql, clientMap);
     }
 

@@ -13,7 +13,7 @@ public class TransactionRowMapper implements RowMapper<Transaction> {
         Transaction transaction = new Transaction();
         transaction.setId(resultSet.getInt("id"));
         transaction.setClientId(resultSet.getInt("client_id"));
-        transaction.setDate(resultSet.getTimestamp("date"));
+        transaction.setDate(resultSet.getDate("date").toLocalDate());
         transaction.setPayee(resultSet.getString("payee"));
         transaction.setMoneyIn(resultSet.getBigDecimal("money_in"));
         transaction.setMoneyOut(resultSet.getBigDecimal("money_out"));

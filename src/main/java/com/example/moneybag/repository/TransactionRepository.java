@@ -1,5 +1,7 @@
 package com.example.moneybag.repository;
 
+import com.example.moneybag.classes.Transaction;
+import com.example.moneybag.rowmapper.TransactionRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +46,7 @@ public class TransactionRepository {
 
     // Update transaction money in, set money_out to zero
     public Integer addTransaction
-    (int clientId, LocalDateTime date, String payee, BigDecimal transactionSumIn, BigDecimal transactionSumOut,
+    (int clientId, LocalDate date, String payee, BigDecimal transactionSumIn, BigDecimal transactionSumOut,
      BigDecimal newBalance, int id) {
 
         String sql = "UPDATE transactions SET (client_id, date, payee, money_in, money_out, end_balance, locked) = " +
@@ -64,6 +67,14 @@ public class TransactionRepository {
         jdbcTemplate.update(sql, new MapSqlParameterSource(transactionMap), keyHolder);
 
         return (Integer) keyHolder.getKeys().get("id");
+    }
+
+    // Get transactions by id
+    public List<Transaction> getTransactionsById(int clientId) {
+        String sql = "SELECT * FROM transactions WHERE client_id = (:value) ORDER BY id DESC";
+        Map<String, Object> transactionMap = new HashMap<>();
+        transactionMap.put("value", clientId);
+        return jdbcTemplate.query(sql, transactionMap, new TransactionRowMapper());
     }
 
     // Get one client all income

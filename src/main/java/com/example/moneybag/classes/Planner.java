@@ -7,10 +7,11 @@ public class Planner {
     private int id;
     private int clientId;
     private String monthYear;
-    private String group;
-    private BigDecimal planned;
+    private int groupCode;
+    private String groupName;
+    private BigDecimal plannedIn;
+    private BigDecimal plannedOut;
     private BigDecimal actual;
-    private BigDecimal free;
 
     public int getId() {
         return id;
@@ -36,20 +37,36 @@ public class Planner {
         this.monthYear = monthYear;
     }
 
-    public String getGroup() {
-        return group;
+    public int getGroupCode() {
+        return groupCode;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupCode(int groupCode) {
+        this.groupCode = groupCode;
     }
 
-    public BigDecimal getPlanned() {
-        return planned;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setPlanned(BigDecimal planned) {
-        this.planned = planned;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public BigDecimal getPlannedIn() {
+        return plannedIn;
+    }
+
+    public void setPlannedIn(BigDecimal plannedIn) {
+        this.plannedIn = plannedIn;
+    }
+
+    public BigDecimal getPlannedOut() {
+        return plannedOut;
+    }
+
+    public void setPlannedOut(BigDecimal plannedOut) {
+        this.plannedOut = plannedOut;
     }
 
     public BigDecimal getActual() {
@@ -58,13 +75,5 @@ public class Planner {
 
     public void setActual(BigDecimal actual) {
         this.actual = actual;
-    }
-
-    public BigDecimal getFree() {
-        return free;
-    }
-
-    public void setFree(BigDecimal free) {
-        this.free = free;
     }
 }

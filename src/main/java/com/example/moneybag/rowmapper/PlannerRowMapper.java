@@ -9,15 +9,16 @@ import java.sql.SQLException;
 public class PlannerRowMapper implements RowMapper<Planner> {
 
     @Override
-    public Planner mapRow(ResultSet resultSet, int id) throws SQLException {
+    public Planner mapRow(ResultSet resultSet, int i) throws SQLException {
         Planner planner = new Planner();
         planner.setId(resultSet.getInt("id"));
         planner.setClientId(resultSet.getInt("client_id"));
         planner.setMonthYear(resultSet.getString("month_year"));
-        planner.setGroup(resultSet.getString("group"));
-        planner.setPlanned(resultSet.getBigDecimal("planned"));
+        planner.setGroupCode(resultSet.getInt("group_code"));
+        planner.setGroupName(resultSet.getString("group_name"));
+        planner.setPlannedIn(resultSet.getBigDecimal("planned_in"));
+        planner.setPlannedOut(resultSet.getBigDecimal("planned_out"));
         planner.setActual(resultSet.getBigDecimal("actual"));
-        planner.setFree(resultSet.getBigDecimal("free"));
         return planner;
     }
 }
