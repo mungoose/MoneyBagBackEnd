@@ -16,7 +16,8 @@ public class PlannerRowMapper implements RowMapper<Planner> {
         planner.setMonthYear(resultSet.getString("month_year"));
         planner.setGroupCode(resultSet.getInt("group_code"));
         planner.setGroupName(resultSet.getString("group_name"));
-        planner.setPlanned(resultSet.getBigDecimal("planned"));
+        planner.setPlannedIn(resultSet.getBigDecimal("planned_in"));
+        planner.setPlannedOut(resultSet.getBigDecimal("planned_out"));
         planner.setActual(resultSet.getBigDecimal("actual"));
         return planner;
     }

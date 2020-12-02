@@ -9,7 +9,8 @@ public class Planner {
     private String monthYear;
     private int groupCode;
     private String groupName;
-    private BigDecimal planned;
+    private BigDecimal plannedIn;
+    private BigDecimal plannedOut;
     private BigDecimal actual;
 
     public int getId() {
@@ -52,12 +53,20 @@ public class Planner {
         this.groupName = groupName;
     }
 
-    public BigDecimal getPlanned() {
-        return planned;
+    public BigDecimal getPlannedIn() {
+        return plannedIn;
     }
 
-    public void setPlanned(BigDecimal planned) {
-        this.planned = planned;
+    public void setPlannedIn(BigDecimal plannedIn) {
+        this.plannedIn = plannedIn;
+    }
+
+    public BigDecimal getPlannedOut() {
+        return plannedOut;
+    }
+
+    public void setPlannedOut(BigDecimal plannedOut) {
+        this.plannedOut = plannedOut;
     }
 
     public BigDecimal getActual() {
@@ -67,5 +76,4 @@ public class Planner {
     public void setActual(BigDecimal actual) {
         this.actual = actual;
     }
-
 }

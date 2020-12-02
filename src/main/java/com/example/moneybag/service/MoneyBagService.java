@@ -1,6 +1,5 @@
 package com.example.moneybag.service;
 
-import antlr.StringUtils;
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +35,8 @@ public class MoneyBagService {
     }
 
     // Get client by id
-    public Client getClientById(int id) {
-        return clientsRepository.getClientById(id);
+    public Client getClientById(int clientId) {
+        return clientsRepository.getClientById(clientId);
     }
 
     // Get balance by id
@@ -80,6 +79,8 @@ public class MoneyBagService {
         for (int i = 0; i < thisList.size(); i++) {
             // Get group code
             int groupCode = transactionAddRequest.getTransactionLines().get(i).getGroupCode();
+            // Get group name
+            String groupName = transactionAddRequest.getTransactionLines().get(i).getGroupName();
             // Get money amount
             BigDecimal moneyIn = transactionAddRequest.getTransactionLines().get(i).getMoneyIn();
             BigDecimal moneyOut = transactionAddRequest.getTransactionLines().get(i).getMoneyOut();
@@ -95,13 +96,21 @@ public class MoneyBagService {
                 moneyLineOut = moneyOut;
             }
             // Add transaction line to transaction_lines table
-            transactionLineRepository.addTransactionLine(transactionId, moneyLineIn, moneyLineOut, groupCode, clientId);
+            transactionLineRepository.addTransactionLine
+                    (transactionId, moneyLineIn, moneyLineOut, groupCode, clientId, groupName);
+
+            // UPDATE PLANNER: Get planner actual value
+            BigDecimal actual = plannerRepository.getPlannerActualById(clientId, groupName);
+            // Update planner actual value
+            actual = actual.add(moneyLineIn);
+            actual = actual.add(moneyLineOut);
+            // Set new actual value
+            plannerRepository.updatePlannerActualById(clientId, groupName, actual);
 
             if (moneyIn != null) {
                 groupBalance = groupBalance.add(moneyIn);
             } else {
                 groupBalance = groupBalance.subtract(moneyOut);
-
             }
         }
         // Calculate new balance
@@ -126,13 +135,15 @@ public class MoneyBagService {
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
     }
 
+    // Get transactions by id
+    public List<Transaction> getTransactionsById(int clientId) {
+        return transactionRepository.getTransactionsById(clientId);
+    }
+
     public BigDecimal oneClientAllIncome(int clientid) {
         List<BigDecimal> allMoneyIn = transactionRepository.oneClientAllIncome(clientid);
-        System.out.println(allMoneyIn.get(1));
         BigDecimal sum = new BigDecimal(0);
-        BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i < allMoneyIn.size(); i++) {
-            num = allMoneyIn.get(i);
+        for (BigDecimal num : allMoneyIn) {
             sum = sum.add(num);
         }
         return sum;
@@ -141,9 +152,7 @@ public class MoneyBagService {
     public BigDecimal oneClientAllCosts(int clientid) {
         List<BigDecimal> allMoneyOut = transactionRepository.oneClientAllCosts(clientid);
         BigDecimal sum = new BigDecimal(0);
-        BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i < allMoneyOut.size(); i++) {
-            num = allMoneyOut.get(i);
+        for (BigDecimal num : allMoneyOut) {
             sum = sum.add(num);
         }
         return sum;
@@ -152,9 +161,7 @@ public class MoneyBagService {
     public BigDecimal getGruopSumOUT(int groupCode, int clientid) {
         List<BigDecimal> allMoneyOut = transactionLineRepository.getGroupSumOUT(groupCode, clientid);
         BigDecimal sum = new BigDecimal(0);
-        BigDecimal num = new BigDecimal(0);
-        for (int i = 0; i < allMoneyOut.size(); i++) {
-            num = allMoneyOut.get(i);
+        for (BigDecimal num : allMoneyOut) {
             sum = sum.add(num);
         }
         return sum;
@@ -163,7 +170,7 @@ public class MoneyBagService {
     public BigDecimal getGruopSumIN(int groupCode, int clientid) {
         List<BigDecimal> allMoneyIn = transactionLineRepository.getGroupSumIN(groupCode, clientid);
         BigDecimal sum = new BigDecimal(0);
-        BigDecimal num = new BigDecimal(0);
+        BigDecimal num;
         for (int i = 0; i < allMoneyIn.size(); i++) {
             num = allMoneyIn.get(i);
             sum = sum.add(num);
@@ -192,7 +199,7 @@ public class MoneyBagService {
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
         String monthYear = formatDate.format(date);
-        monthYear = monthYear.substring(0,1).toUpperCase() + monthYear.substring(1).toLowerCase();
+        monthYear = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1).toLowerCase();
         int groupCode = 1;
         List<String> defaultNames = Arrays.asList("Sissetulek", "Toit", "Väljas söömine", "Kodutarbed", "Kodulaen/üür", "Kindlustus",
                 "Telekommunikatsioon", "Transport", "Meelelahutus", "Tervis", "Säästmine");
@@ -213,6 +220,13 @@ public class MoneyBagService {
             Planner planner = plannerList.get(i);
             plannerRepository.insertPlannerById(planner);
         }
+    }
+
+    // Get planned in and planned out difference by id
+    public BigDecimal getPlannedDifferenceById(int clientId) {
+        BigDecimal plannedIn = plannerRepository.getPlannerById(clientId).get(1).getPlannedIn();
+        BigDecimal plannedOut = plannerRepository.getPlannerById(clientId).get(1).getPlannedOut();
+        return plannedIn.subtract(plannedOut);
     }
 
 }

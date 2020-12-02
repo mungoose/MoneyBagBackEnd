@@ -32,21 +32,24 @@ public class PlannerRepository {
     }
 
     public void insertPlannerById(Planner planner) {
-        String sql = "INSERT INTO planner (client_id, month_year, group_code, group_name, planned, actual) " +
-                "VALUES (:value1, :value2, :value3, :value4, :value5, :value6)";
+        String sql =
+                "INSERT INTO planner (client_id, month_year, group_code, group_name, planned_in, planned_out, actual) " +
+                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6, :value7)";
         Map<String, Object> plannerMap = new HashMap<>();
         plannerMap.put("value1", planner.getClientId());
         plannerMap.put("value2", planner.getMonthYear());
         plannerMap.put("value3", planner.getGroupCode());
         plannerMap.put("value4", planner.getGroupName());
-        plannerMap.put("value5", planner.getPlanned());
-        plannerMap.put("value6", planner.getActual());
+        plannerMap.put("value5", planner.getPlannedIn());
+        plannerMap.put("value6", planner.getPlannedOut());
+        plannerMap.put("value7", planner.getActual());
         jdbcTemplate.update(sql, plannerMap);
     }
 
     public void insertDefaultPlannerById(int clientId, String monthYear, int groupCode, String groupName) {
-        String sql = "INSERT INTO planner (client_id, month_year, group_code, group_name, planned, actual) " +
-                "VALUES (:value1, :value2, :value3, :value4, :value5, :value6)";
+        String sql =
+                "INSERT INTO planner (client_id, month_year, group_code, group_name, planned_in, planned_out, actual) " +
+                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6, :value7)";
         Map<String, Object> plannerMap = new HashMap<>();
         plannerMap.put("value1", clientId);
         plannerMap.put("value2", monthYear);
@@ -54,6 +57,24 @@ public class PlannerRepository {
         plannerMap.put("value4", groupName);
         plannerMap.put("value5", BigDecimal.ZERO);
         plannerMap.put("value6", BigDecimal.ZERO);
+        plannerMap.put("value7", BigDecimal.ZERO);
+        jdbcTemplate.update(sql, plannerMap);
+    }
+
+    public BigDecimal getPlannerActualById(int clientId, String groupName) {
+        String sql = "SELECT actual FROM planner WHERE client_id = (:value1) AND group_name = (:value2)";
+        Map<String, Object> plannerMap = new HashMap<>();
+        plannerMap.put("value1", clientId);
+        plannerMap.put("value2", groupName);
+        return jdbcTemplate.queryForObject(sql, plannerMap, BigDecimal.class);
+    }
+
+    public void updatePlannerActualById(int clientId, String groupName, BigDecimal amount) {
+        String sql = "UPDATE planner SET actual = (:value1) WHERE group_name = (:value2) AND client_id = (:value3)";
+        Map<String, Object> plannerMap = new HashMap<>();
+        plannerMap.put("value1", amount);
+        plannerMap.put("value2", groupName);
+        plannerMap.put("value3", clientId);
         jdbcTemplate.update(sql, plannerMap);
     }
 

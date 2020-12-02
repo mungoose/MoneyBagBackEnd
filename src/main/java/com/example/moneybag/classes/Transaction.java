@@ -1,12 +1,12 @@
 package com.example.moneybag.classes;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 public class Transaction {
     private int id;
     private int clientId;
-    private Timestamp date;
+    private LocalDate date;
     private String payee;
     private BigDecimal moneyIn;
     private BigDecimal moneyOut;
@@ -29,11 +29,11 @@ public class Transaction {
         this.clientId = clientId;
     }
 
-    public Timestamp getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

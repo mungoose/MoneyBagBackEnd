@@ -27,8 +27,8 @@ public class MoneyBagController {
     // Get client by id
     @CrossOrigin
     @GetMapping("getClientById")
-    public Client getClientById(int id) {
-        return moneyBagService.getClientById(id);
+    public Client getClientById(int clientId) {
+        return moneyBagService.getClientById(clientId);
     }
     // localhost:8083/MoneyBag/getClientById?id=1
 
@@ -72,6 +72,14 @@ public class MoneyBagController {
         moneyBagService.addTransactionCombined(transactionAddRequest, clientId);
     }
     // localhost:8083/MoneyBag/addTransaction?clientId=1 + body
+
+    // Get all transactions by client id
+    @CrossOrigin
+    @GetMapping("getTransactionsById")
+    public List<Transaction> getTransactionsById(int clientId) {
+        return moneyBagService.getTransactionsById(clientId);
+    }
+    // localhost:8083/MoneyBag/getTransactionsById?clientId=1
 
     //Get all income, one client
     @CrossOrigin

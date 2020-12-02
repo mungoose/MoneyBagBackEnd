@@ -7,6 +7,7 @@ public class TransactionLineAddRequest {
     private BigDecimal moneyIn;
     private BigDecimal moneyOut;
     private int groupCode;
+    private String groupName;
 
     public BigDecimal getMoneyIn() {
         return moneyIn;
@@ -30,5 +31,13 @@ public class TransactionLineAddRequest {
 
     public void setGroupCode(int groupCode) {
         this.groupCode = groupCode;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

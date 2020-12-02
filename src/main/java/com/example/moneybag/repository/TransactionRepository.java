@@ -1,5 +1,7 @@
 package com.example.moneybag.repository;
 
+import com.example.moneybag.classes.Transaction;
+import com.example.moneybag.rowmapper.TransactionRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -65,6 +67,14 @@ public class TransactionRepository {
         jdbcTemplate.update(sql, new MapSqlParameterSource(transactionMap), keyHolder);
 
         return (Integer) keyHolder.getKeys().get("id");
+    }
+
+    // Get transactions by id
+    public List<Transaction> getTransactionsById(int clientId) {
+        String sql = "SELECT * FROM transactions WHERE client_id = (:value) ORDER BY id DESC";
+        Map<String, Object> transactionMap = new HashMap<>();
+        transactionMap.put("value", clientId);
+        return jdbcTemplate.query(sql, transactionMap, new TransactionRowMapper());
     }
 
     // Get one client all income
