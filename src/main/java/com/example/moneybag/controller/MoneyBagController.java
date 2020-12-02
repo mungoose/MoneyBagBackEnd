@@ -16,6 +16,13 @@ public class MoneyBagController {
     @Autowired
     private MoneyBagService moneyBagService;
 
+
+    @CrossOrigin
+    @PutMapping("login")
+    public String login(String userName, String password) {
+        return moneyBagService.validate(userName, password);
+    }
+
     // Add client
     @CrossOrigin
     @PostMapping("addClient")
