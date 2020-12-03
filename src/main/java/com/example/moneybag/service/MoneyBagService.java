@@ -3,6 +3,7 @@ package com.example.moneybag.service;
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,11 +29,24 @@ public class MoneyBagService {
     private GoalSetterRepository goalSetterRepository;
     @Autowired
     private PlannerRepository plannerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Add client
     public void addClient(Client client) {
         clientsRepository.addClient(client);
     }
+
+
+    public boolean validate(String userName, String rawPassowrd) {  //
+        String encodedPassword = "";  //from DB by userName
+        return passwordEncoder.matches(rawPassowrd, encodedPassword);
+    }
+
+    public void savePassword(String password) {                     // parool sellest läbi ja andmebaasi
+        String encodedPassword = passwordEncoder.encode(password);
+    }
+
 
     // Get client by id
     public Client getClientById(int clientId) {
@@ -56,7 +70,7 @@ public class MoneyBagService {
 
     // Get all client group names by client id
     public List<String> getAllGroupNamesByClientId(int clientId) {
-        return plannerRepository.getAllGroupNamesByClientId(clientId);
+        return plannerRepository.getAllOutGroupNamesByClientId(clientId);
     }
 
 
@@ -100,12 +114,12 @@ public class MoneyBagService {
                     (transactionId, moneyLineIn, moneyLineOut, groupCode, clientId, groupName);
 
             // UPDATE PLANNER: Get planner actual value
-            BigDecimal actual = plannerRepository.getPlannerActualById(clientId, groupName);
+            BigDecimal actual = plannerRepository.getPlannerOutActualById(clientId, groupName);
             // Update planner actual value
             actual = actual.add(moneyLineIn);
             actual = actual.add(moneyLineOut);
             // Set new actual value
-            plannerRepository.updatePlannerActualById(clientId, groupName, actual);
+            plannerRepository.updatePlannerOutActualById(clientId, groupName, actual);
 
             if (moneyIn != null) {
                 groupBalance = groupBalance.add(moneyIn);
@@ -188,45 +202,67 @@ public class MoneyBagService {
         goalSetterRepository.changeGoal(goalSetter);
     }
 
-    // Get planner by id
-    public List<Planner> getPlannerById(int id) {
-        return plannerRepository.getPlannerById(id);
+
+
+    // Get planner out by id
+    public List<PlannerOut> getPlannerOutById(int clientId) {
+        return plannerRepository.getPlannerOutById(clientId);
     }
 
-    // Insert default planner lines
-    public void insertDefaultPlannerById(int clientId) {
+    // Get planner out by id
+    public List<PlannerIn> getPlannerInById(int clientId) {
+        return plannerRepository.getPlannerInById(clientId);
+    }
+
+
+    // Insert default planner out lines
+    public void insertDefaultPlannerOutById(int clientId) {
         // Create correct date format
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
         String monthYear = formatDate.format(date);
         monthYear = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1).toLowerCase();
         int groupCode = 1;
-        List<String> defaultNames = Arrays.asList("Sissetulek", "Toit", "Väljas söömine", "Kodutarbed", "Kodulaen/üür", "Kindlustus",
+        List<String> defaultNames = Arrays.asList("Toit", "Väljas söömine", "Kodutarbed", "Kodulaen/üür", "Kindlustus",
                 "Telekommunikatsioon", "Transport", "Meelelahutus", "Tervis", "Säästmine");
         for (int i = 0; i < defaultNames.size(); i++) {
-            groupCode = i + 1;
+            groupCode = i + 2;
             String groupName = defaultNames.get(i);
-            plannerRepository.insertDefaultPlannerById(clientId, monthYear, groupCode, groupName);
+            plannerRepository.insertDefaultPlannerOutById(clientId, monthYear, groupCode, groupName);
         }
     }
 
-    // Update planner by id
-    @Transactional
-    public void updatePlannerById(PlannerCreator plannerCreator) {
-        int clientId = plannerCreator.getPlannerCreatorList().get(1).getClientId();
-        plannerRepository.deletePlannerByID(clientId);
-        List<Planner> plannerList = plannerCreator.getPlannerCreatorList();
-        for (int i = 0; i < plannerList.size(); i++) {
-            Planner planner = plannerList.get(i);
-            plannerRepository.insertPlannerById(planner);
+    // Insert default planner in line
+    public void insertDefaultPlannerInById(int clientId) {
+        // Create correct date format
+        Date date = new Date();
+        SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
+        String monthYear = formatDate.format(date);
+        monthYear = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1).toLowerCase();
+        plannerRepository.insertDefaultPlannerInById(clientId, monthYear, 1, "Sissetulek");
+
+    }
+
+
+    // Update planner out by id
+    public void updatePlannerOutById(PlannerOutCreator plannerOutCreator, int clientId) {
+        plannerRepository.deletePlannerOutByID(clientId);
+        List<PlannerOut> plannerOutList = plannerOutCreator.getPlannerOutCreatorList();
+        for (int i = 0; i < plannerOutList.size(); i++) {
+            PlannerOut plannerOut = plannerOutList.get(i);
+            plannerRepository.insertPlannerOutById(plannerOut);
         }
     }
 
-    // Get planned in and planned out difference by id
-    public BigDecimal getPlannedDifferenceById(int clientId) {
-        BigDecimal plannedIn = plannerRepository.getPlannerById(clientId).get(1).getPlannedIn();
-        BigDecimal plannedOut = plannerRepository.getPlannerById(clientId).get(1).getPlannedOut();
-        return plannedIn.subtract(plannedOut);
+    // Update planner in by id
+    public void updatePlannerInById(PlannerInCreator plannerInCreator, int clientId) {
+        plannerRepository.deletePlannerInByID(clientId);
+        List<PlannerIn> plannerInList = plannerInCreator.getPlannerInCreatorList();
+        for (int i = 0; i < plannerInList.size(); i++) {
+            PlannerIn plannerIn = plannerInList.get(i);
+            plannerRepository.insertPlannerInById(plannerIn);
+        }
     }
+
 
 }
