@@ -19,8 +19,8 @@ public class MoneyBagController {
 
     @CrossOrigin
     @PutMapping("login")
-    public String login(String userName, String password) {
-        return moneyBagService.validate(userName, password);
+    public String login(@RequestBody Login login) {
+        return moneyBagService.validate(login);
     }
 
     // Add client

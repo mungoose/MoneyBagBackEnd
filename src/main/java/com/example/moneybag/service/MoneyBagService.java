@@ -47,15 +47,15 @@ public class MoneyBagService {
         return jwt;
     }
 
-    public String validate(String userName, String rawPassword) {
-        String encodedPassword = clientsRepository.askPassword(userName);
-        boolean isValidate = passwordEncoder.matches(rawPassword, encodedPassword);
-        String token = "";
-        if (isValidate == true) {
-            token = tokenGenerator(userName);
+    public String validate(Login login) {
+        String encodedPassword = clientsRepository.askPassword(login.getUserName());
+        boolean isValidate = passwordEncoder.matches(login.getPassword(), encodedPassword);
+        String token;
+        if (isValidate) {
+            token = tokenGenerator(login.getUserName());
         }
-        else{
-            throw new RuntimeException("Kasutajanimi või parool ei olnud õige");
+        else {
+            throw new RuntimeException("Ei õnnestunud");
         }
         return token;
     }
