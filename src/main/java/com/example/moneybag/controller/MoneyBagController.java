@@ -16,12 +16,12 @@ public class MoneyBagController {
     @Autowired
     private MoneyBagService moneyBagService;
 
-    // Read user and password, return token
+/*    // Read user and password, return token
     @CrossOrigin
     @GetMapping("authorization")
     public BigDecimal authorization(@RequestBody UserPassword userPassword){
         return BigDecimal.ZERO;
-    }
+    }*/
 
     // Add client
     @CrossOrigin
