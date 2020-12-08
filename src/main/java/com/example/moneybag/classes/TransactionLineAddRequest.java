@@ -4,25 +4,25 @@ import java.math.BigDecimal;
 
 public class TransactionLineAddRequest {
 
-    private BigDecimal moneyIn;
-    private BigDecimal moneyOut;
+    private BigDecimal moneyInLine;
+    private BigDecimal moneyOutLine;
     private int groupCode;
     private String groupName;
 
-    public BigDecimal getMoneyIn() {
-        return moneyIn;
+    public BigDecimal getMoneyInLine() {
+        return moneyInLine;
     }
 
-    public void setMoneyIn(BigDecimal moneyIn) {
-        this.moneyIn = moneyIn;
+    public void setMoneyInLine(BigDecimal moneyInLine) {
+        this.moneyInLine = moneyInLine;
     }
 
-    public BigDecimal getMoneyOut() {
-        return moneyOut;
+    public BigDecimal getMoneyOutLine() {
+        return moneyOutLine;
     }
 
-    public void setMoneyOut(BigDecimal moneyOut) {
-        this.moneyOut = moneyOut;
+    public void setMoneyOutLine(BigDecimal moneyOutLine) {
+        this.moneyOutLine = moneyOutLine;
     }
 
     public int getGroupCode() {

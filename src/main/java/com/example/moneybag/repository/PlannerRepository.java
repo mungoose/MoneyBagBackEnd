@@ -84,7 +84,7 @@ public class PlannerRepository {
     public void insertPlannerOutById(PlannerOut plannerOut) {
         String sql =
                 "INSERT INTO planner_out (client_id, month_year, group_code, group_name, planned_out, actual) " +
-                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6";
+                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6)";
         Map<String, Object> plannerMap = new HashMap<>();
         plannerMap.put("value1", plannerOut.getClientId());
         plannerMap.put("value2", plannerOut.getMonthYear());
@@ -98,7 +98,7 @@ public class PlannerRepository {
     public void insertPlannerInById(PlannerIn plannerIn) {
         String sql =
                 "INSERT INTO planner_in (client_id, month_year, group_code, group_name, planned_in, actual) " +
-                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6";
+                        "VALUES (:value1, :value2, :value3, :value4, :value5, :value6)";
         Map<String, Object> plannerMap = new HashMap<>();
         plannerMap.put("value1", plannerIn.getClientId());
         plannerMap.put("value2", plannerIn.getMonthYear());

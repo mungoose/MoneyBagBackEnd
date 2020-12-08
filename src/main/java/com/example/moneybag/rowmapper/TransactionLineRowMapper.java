@@ -13,9 +13,10 @@ public class TransactionLineRowMapper implements RowMapper<TransactionLine> {
         TransactionLine transactionLine = new TransactionLine();
         transactionLine.setId(resultSet.getInt("id"));
         transactionLine.setTransactionId(resultSet.getInt("transaction_id"));
-        transactionLine.setMoneyIn(resultSet.getBigDecimal("money_in"));
-        transactionLine.setMoneyOut(resultSet.getBigDecimal("money_out"));
+        transactionLine.setMoneyInLine(resultSet.getBigDecimal("money_in_line"));
+        transactionLine.setMoneyOutLine(resultSet.getBigDecimal("money_out_line"));
         transactionLine.setGroupCode(resultSet.getInt("group_code"));
+        transactionLine.setGroupName(resultSet.getString("group_name"));
         return transactionLine;
     }
 }

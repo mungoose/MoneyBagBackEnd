@@ -77,6 +77,7 @@ public class TransactionRepository {
         return jdbcTemplate.query(sql, transactionMap, new TransactionRowMapper());
     }
 
+
     // Get one client all income
     public List<BigDecimal> oneClientAllIncome (int clientid) {
         String sql = "SELECT money_in FROM transactions WHERE client_id=(:value)";

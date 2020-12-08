@@ -2,17 +2,16 @@ package com.example.moneybag.service;
 
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
+import liquibase.pro.packaged.B;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.TransactionScoped;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class MoneyBagService {
@@ -29,22 +28,11 @@ public class MoneyBagService {
     private GoalSetterRepository goalSetterRepository;
     @Autowired
     private PlannerRepository plannerRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
 
     // Add client
     public void addClient(Client client) {
         clientsRepository.addClient(client);
-    }
-
-
-    public boolean validate(String userName, String rawPassowrd) {  //
-        String encodedPassword = "";  //from DB by userName
-        return passwordEncoder.matches(rawPassowrd, encodedPassword);
-    }
-
-    public void savePassword(String password) {                     // parool sellest läbi ja andmebaasi
-        String encodedPassword = passwordEncoder.encode(password);
     }
 
 
@@ -70,7 +58,9 @@ public class MoneyBagService {
 
     // Get all client group names by client id
     public List<String> getAllGroupNamesByClientId(int clientId) {
-        return plannerRepository.getAllOutGroupNamesByClientId(clientId);
+        List<String> combined = new ArrayList<>(plannerRepository.getAllInGroupNamesByClientId(clientId));
+        combined.addAll(plannerRepository.getAllOutGroupNamesByClientId(clientId));
+        return combined;
     }
 
 
@@ -96,8 +86,8 @@ public class MoneyBagService {
             // Get group name
             String groupName = transactionAddRequest.getTransactionLines().get(i).getGroupName();
             // Get money amount
-            BigDecimal moneyIn = transactionAddRequest.getTransactionLines().get(i).getMoneyIn();
-            BigDecimal moneyOut = transactionAddRequest.getTransactionLines().get(i).getMoneyOut();
+            BigDecimal moneyIn = transactionAddRequest.getTransactionLines().get(i).getMoneyInLine();
+            BigDecimal moneyOut = transactionAddRequest.getTransactionLines().get(i).getMoneyOutLine();
 
             // Initialize transaction line sum in and sum out
             BigDecimal moneyLineIn = BigDecimal.ZERO;
@@ -106,20 +96,24 @@ public class MoneyBagService {
             // Decide to add transaction line sum to sum in or sum out
             if (moneyIn != null) {
                 moneyLineIn = moneyIn;
+                // UPDATE PLANNER: Get planner in actual value
+                BigDecimal actual2 = plannerRepository.getPlannerInActualById(clientId, groupName);
+                // Update planner in actual value
+                actual2 = actual2.add(moneyLineIn);
+                // Set new in actual value
+                plannerRepository.updatePlannerInActualById(clientId, groupName, actual2);
             } else {
                 moneyLineOut = moneyOut;
+                // UPDATE PLANNER: Get planner out actual value
+                BigDecimal actual = plannerRepository.getPlannerOutActualById(clientId, groupName);
+                // Update planner out actual value
+                actual = actual.add(moneyLineOut);
+                // Set new out actual value
+                plannerRepository.updatePlannerOutActualById(clientId, groupName, actual);
             }
             // Add transaction line to transaction_lines table
             transactionLineRepository.addTransactionLine
-                    (transactionId, moneyLineIn, moneyLineOut, groupCode, clientId, groupName);
-
-            // UPDATE PLANNER: Get planner actual value
-            BigDecimal actual = plannerRepository.getPlannerOutActualById(clientId, groupName);
-            // Update planner actual value
-            actual = actual.add(moneyLineIn);
-            actual = actual.add(moneyLineOut);
-            // Set new actual value
-            plannerRepository.updatePlannerOutActualById(clientId, groupName, actual);
+                    (transactionId, moneyLineIn, moneyLineOut, groupCode, groupName);
 
             if (moneyIn != null) {
                 groupBalance = groupBalance.add(moneyIn);
@@ -149,10 +143,61 @@ public class MoneyBagService {
                         transactionSumIn, transactionSumOut.abs(), newBalance, transactionId);
     }
 
+
     // Get transactions by id
     public List<Transaction> getTransactionsById(int clientId) {
         return transactionRepository.getTransactionsById(clientId);
     }
+
+    // Get transactions and transaction lines by client id
+    public List<TransactionCombined> getTransactionsCombined(int clientId) {
+
+        // Create a new TransactionCombined list
+        List<TransactionCombined> allTransactions = new ArrayList<>();
+
+        // Get all transactions
+        List<Transaction> transactions = transactionRepository.getTransactionsById(clientId);
+
+        // Loop through transactions and add result to allTransactions list
+        for (Transaction transaction : transactions) {
+            // Create a TransactionCombined object to add read elements to
+            TransactionCombined transactionCombined = new TransactionCombined();
+            // Read transaction id and save it to a variable
+            int id = transaction.getId();
+            // Read individual variables and add to TransactionCombined object
+            transactionCombined.setId(id);
+            transactionCombined.setDate(transaction.getDate());
+            transactionCombined.setPayee(transaction.getPayee());
+            transactionCombined.setMoneyIn(transaction.getMoneyIn());
+            transactionCombined.setMoneyOut(transaction.getMoneyOut());
+            transactionCombined.setEndBalance(transaction.getEndBalance());
+            transactionCombined.setLocked(transaction.getLocked());
+
+            // Get all transaction lines by transaction id
+            List<TransactionLine> transactionLinesGet =
+                    transactionLineRepository.getTransactionLinesByTransactionId(id);
+            // Create a new list for TransactionLinesList objects
+            List<TransactionLinesList> transactionLinesLists = new ArrayList<>();
+            // Loop through transactionLines
+            for (TransactionLine transactionLine : transactionLinesGet) {
+                // Create a new TransactionLinesList object
+                TransactionLinesList transactionLines = new TransactionLinesList();
+                // Read individual variables and add to TransactionLinesList object
+                transactionLines.setId(transactionLine.getId());
+                transactionLines.setMoneyInLine(transactionLine.getMoneyInLine());
+                transactionLines.setMoneyOutLine(transactionLine.getMoneyOutLine());
+                transactionLines.setGroupName(transactionLine.getGroupName());
+                // Add TransactionLinesList object to transactionLinesList
+                transactionLinesLists.add(transactionLines);
+            }
+            // Add TransactionLinesList to transactionCombined object
+            transactionCombined.setTransactionLinesList(transactionLinesLists);
+            // Add transactionCombined object to allTransactions list
+            allTransactions.add(transactionCombined);
+        }
+        return allTransactions;
+    }
+
 
     public BigDecimal oneClientAllIncome(int clientid) {
         List<BigDecimal> allMoneyIn = transactionRepository.oneClientAllIncome(clientid);
@@ -203,7 +248,6 @@ public class MoneyBagService {
     }
 
 
-
     // Get planner out by id
     public List<PlannerOut> getPlannerOutById(int clientId) {
         return plannerRepository.getPlannerOutById(clientId);
@@ -243,7 +287,7 @@ public class MoneyBagService {
 
     }
 
-
+    @Transactional
     // Update planner out by id
     public void updatePlannerOutById(PlannerOutCreator plannerOutCreator, int clientId) {
         plannerRepository.deletePlannerOutByID(clientId);
@@ -254,6 +298,7 @@ public class MoneyBagService {
         }
     }
 
+    @Transactional
     // Update planner in by id
     public void updatePlannerInById(PlannerInCreator plannerInCreator, int clientId) {
         plannerRepository.deletePlannerInByID(clientId);

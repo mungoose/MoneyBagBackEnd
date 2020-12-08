@@ -2,6 +2,7 @@ package com.example.moneybag.controller;
 
 import com.example.moneybag.classes.*;
 import com.example.moneybag.service.MoneyBagService;
+import liquibase.pro.packaged.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,12 +17,6 @@ public class MoneyBagController {
     @Autowired
     private MoneyBagService moneyBagService;
 
-/*    // Read user and password, return token
-    @CrossOrigin
-    @GetMapping("authorization")
-    public BigDecimal authorization(@RequestBody UserPassword userPassword){
-        return BigDecimal.ZERO;
-    }*/
 
     // Add client
     @CrossOrigin
@@ -72,6 +67,7 @@ public class MoneyBagController {
     // localhost:8083/MoneyBag/getAllGroupNamesByClientId?clientId=1
 
 
+
     // Add transaction and transaction line simultaneously
     @CrossOrigin
     @PostMapping("addTransaction")
@@ -87,6 +83,16 @@ public class MoneyBagController {
         return moneyBagService.getTransactionsById(clientId);
     }
     // localhost:8083/MoneyBag/getTransactionsById?clientId=1
+
+    // Get all transactions and transaction lines by client id
+    @CrossOrigin
+    @GetMapping("getTransactionsCombined")
+    public List<TransactionCombined> getTransactionsCombined(int clientId) {
+        return moneyBagService.getTransactionsCombined(clientId);
+    }
+    // localhost:8083/MoneyBag/getTransactionsCombined?clientId=1
+
+
 
     //Get all income, one client
     @CrossOrigin
@@ -172,7 +178,7 @@ public class MoneyBagController {
     public void updatePlannerOutById(@RequestBody PlannerOutCreator plannerOutCreator, int clientId) {
         moneyBagService.updatePlannerOutById(plannerOutCreator, clientId);
     }
-    // localhost:8083/MoneyBag/updatePlannerOutById?id=1
+    // localhost:8083/MoneyBag/updatePlannerOutById?clientId=1
 
     // Update planner in by id
     @CrossOrigin
@@ -180,7 +186,7 @@ public class MoneyBagController {
     public void updatePlannerInById(@RequestBody PlannerInCreator plannerInCreator, int clientId) {
         moneyBagService.updatePlannerInById(plannerInCreator, clientId);
     }
-    // localhost:8083/MoneyBag/updatePlannerInById?id=1
+    // localhost:8083/MoneyBag/updatePlannerInById?clientId=1
 
 }
 
