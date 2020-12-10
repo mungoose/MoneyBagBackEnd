@@ -169,6 +169,7 @@ public class MoneyBagController {
     }
     // localhost:8083/MoneyBag/getPlannerInById?id=1
 
+/*
 
     // Insert default planner out lines
     @CrossOrigin
@@ -176,7 +177,7 @@ public class MoneyBagController {
     public void insertDefaultPlannerOutById(String userName) {
         moneyBagService.insertDefaultPlannerOutById(userName);
     }
-    // localhost:8083/MoneyBag/insertDefaultPlannerOutById?clientId=1
+    // localhost:8083/MoneyBag/insertDefaultPlannerOutByUserName?userName=1
 
     // Insert default planner in lines
     @CrossOrigin
@@ -186,6 +187,7 @@ public class MoneyBagController {
     }
     // localhost:8083/MoneyBag/insertDefaultPlannerInById?clientId=1
 
+*/
 
     // Update planner out by id
     @CrossOrigin

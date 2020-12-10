@@ -77,7 +77,9 @@ public class MoneyBagService {
         BigDecimal balance = client.getBalance().ZERO;
         String userName = client.getUserName();
         String password = encodedPassword(client.getPassword());
-        clientsRepository.addClient(firstName, lastName, balance, userName, password);
+        int clientId = clientsRepository.addClient(firstName, lastName, balance, userName, password);
+        insertDefaultPlannerOutById(clientId);
+        insertDefaultPlannerInById(clientId);
     }
 
 
@@ -305,8 +307,7 @@ public class MoneyBagService {
 
 
     // Insert default planner out lines
-    public void insertDefaultPlannerOutById(String userName) {
-        int clientId = clientsRepository.getIdByUserName(userName);
+    public void insertDefaultPlannerOutById(int clientId) {
         // Create correct date format
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
@@ -323,8 +324,7 @@ public class MoneyBagService {
     }
 
     // Insert default planner in line
-    public void insertDefaultPlannerInById(String userName) {
-        int clientId = clientsRepository.getIdByUserName(userName);
+    public void insertDefaultPlannerInById(int clientId) {
         // Create correct date format
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
