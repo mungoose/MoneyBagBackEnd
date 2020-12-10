@@ -64,4 +64,10 @@ public class ClientsRepository {
         return jdbcTemplate.queryForObject(sql, clientMap, BigDecimal.class);
     }
 
+    public Integer getIdByUserName(String userName) {
+        String sql = "SELECT id FROM clients WHERE username = (:value)";
+        Map<String, Object> clientMap = new HashMap<>();
+        clientMap.put("value", userName);
+        return jdbcTemplate.queryForObject(sql, clientMap, Integer.class);
+    }
 }

@@ -63,6 +63,13 @@ public class MoneyBagService {
     }
 
 
+
+    public Integer getIdByUserName(String userName) {
+        return clientsRepository.getIdByUserName(userName);
+    }
+
+
+
     // Add client
     public void addClient(Client client) {
         String firstName = client.getFirstName();
@@ -298,7 +305,8 @@ public class MoneyBagService {
 
 
     // Insert default planner out lines
-    public void insertDefaultPlannerOutById(int clientId) {
+    public void insertDefaultPlannerOutById(String userName) {
+        int clientId = clientsRepository.getIdByUserName(userName);
         // Create correct date format
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
@@ -315,7 +323,8 @@ public class MoneyBagService {
     }
 
     // Insert default planner in line
-    public void insertDefaultPlannerInById(int clientId) {
+    public void insertDefaultPlannerInById(String userName) {
+        int clientId = clientsRepository.getIdByUserName(userName);
         // Create correct date format
         Date date = new Date();
         SimpleDateFormat formatDate = new SimpleDateFormat("MMMM yyyy", Locale.forLanguageTag("et-EE"));
@@ -346,6 +355,5 @@ public class MoneyBagService {
             plannerRepository.insertPlannerInById(plannerIn);
         }
     }
-
 
 }
