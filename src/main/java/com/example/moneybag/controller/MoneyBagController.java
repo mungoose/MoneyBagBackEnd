@@ -25,6 +25,12 @@ public class MoneyBagController {
         return moneyBagService.validate(login);
     }
 
+    @CrossOrigin
+    @GetMapping("getIdByUserName")
+    public Integer getIdByUserName(String userName) {
+        return moneyBagService.getIdByUserName(userName);
+    }
+    // localhost:8083/MoneyBag/getIdByUserName?userName=peter
 
 
     // Add client
@@ -166,17 +172,17 @@ public class MoneyBagController {
 
     // Insert default planner out lines
     @CrossOrigin
-    @PostMapping("insertDefaultPlannerOutById")
-    public void insertDefaultPlannerOutById(int clientId) {
-        moneyBagService.insertDefaultPlannerOutById(clientId);
+    @PostMapping("insertDefaultPlannerOutByUserName")
+    public void insertDefaultPlannerOutById(String userName) {
+        moneyBagService.insertDefaultPlannerOutById(userName);
     }
     // localhost:8083/MoneyBag/insertDefaultPlannerOutById?clientId=1
 
     // Insert default planner in lines
     @CrossOrigin
-    @PostMapping("insertDefaultPlannerInById")
-    public void insertDefaultPlannerInById(int clientId) {
-        moneyBagService.insertDefaultPlannerInById(clientId);
+    @PostMapping("insertDefaultPlannerInByUserName")
+    public void insertDefaultPlannerInById(String userName) {
+        moneyBagService.insertDefaultPlannerInById(userName);
     }
     // localhost:8083/MoneyBag/insertDefaultPlannerInById?clientId=1
 
