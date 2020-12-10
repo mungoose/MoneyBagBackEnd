@@ -2,15 +2,12 @@ package com.example.moneybag.service;
 
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
-import liquibase.pro.packaged.B;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.TransactionScoped;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
