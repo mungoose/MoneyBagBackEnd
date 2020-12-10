@@ -18,6 +18,15 @@ public class MoneyBagController {
     private MoneyBagService moneyBagService;
 
 
+
+    @CrossOrigin
+    @PutMapping("login")
+    public String login(@RequestBody Login login) {
+        return moneyBagService.validate(login);
+    }
+
+
+
     // Add client
     @CrossOrigin
     @PostMapping("addClient")
