@@ -76,15 +76,10 @@
                              references="transactions(id)"
                              primaryKey="false" unique="false"/>
             </column>
-            <column name="client_id" type="integer">
-                <constraints nullable="false" foreignKeyName="fk_clients_transactions"
-                             references="clients(id)"
-                             primaryKey="false" unique="false"/>
-            </column>
-            <column name="money_in" type="numeric">
+            <column name="money_in_line" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
-            <column name="money_out" type="numeric">
+            <column name="money_out_line" type="numeric">
                 <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="group_code" type="integer">
@@ -113,12 +108,12 @@
             </column>
         </createTable>
 
-        <createTable tableName="planner">
+        <createTable tableName="planner_in">
             <column name="id" type="integer" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="client_id" type="integer">
-                <constraints nullable="false" foreignKeyName="fk_clients_planner"
+                <constraints nullable="false" foreignKeyName="fk_clients_planner_in"
                              references="clients(id)"
                              primaryKey="false" unique="false"/>
             </column>
@@ -133,6 +128,29 @@
             </column>
             <column name="planned_in" type="numeric">
                 <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="actual" type="numeric">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="planner_out">
+            <column name="id" type="integer" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="client_id" type="integer">
+                <constraints nullable="false" foreignKeyName="fk_clients_planner_out"
+                             references="clients(id)"
+                             primaryKey="false" unique="false"/>
+            </column>
+            <column name="month_year" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
+            </column>
+            <column name="group_code" type="integer">
+                <constraints nullable="true" primaryKey="false" unique="false"/>
+            </column>
+            <column name="group_name" type="text">
+                <constraints nullable="false" primaryKey="false" unique="false"/>
             </column>
             <column name="planned_out" type="numeric">
                 <constraints nullable="true" primaryKey="false" unique="false"/>

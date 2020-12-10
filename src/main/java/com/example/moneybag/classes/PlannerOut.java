@@ -2,14 +2,13 @@ package com.example.moneybag.classes;
 
 import java.math.BigDecimal;
 
-public class Planner {
+public class PlannerOut {
 
     private int id;
     private int clientId;
     private String monthYear;
     private int groupCode;
     private String groupName;
-    private BigDecimal plannedIn;
     private BigDecimal plannedOut;
     private BigDecimal actual;
 
@@ -51,14 +50,6 @@ public class Planner {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
-    }
-
-    public BigDecimal getPlannedIn() {
-        return plannedIn;
-    }
-
-    public void setPlannedIn(BigDecimal plannedIn) {
-        this.plannedIn = plannedIn;
     }
 
     public BigDecimal getPlannedOut() {

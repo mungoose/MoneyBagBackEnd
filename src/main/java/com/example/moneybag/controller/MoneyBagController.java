@@ -2,6 +2,7 @@ package com.example.moneybag.controller;
 
 import com.example.moneybag.classes.*;
 import com.example.moneybag.service.MoneyBagService;
+import liquibase.pro.packaged.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ public class MoneyBagController {
 
     @Autowired
     private MoneyBagService moneyBagService;
+
 
     // Add client
     @CrossOrigin
@@ -65,6 +67,7 @@ public class MoneyBagController {
     // localhost:8083/MoneyBag/getAllGroupNamesByClientId?clientId=1
 
 
+
     // Add transaction and transaction line simultaneously
     @CrossOrigin
     @PostMapping("addTransaction")
@@ -80,6 +83,16 @@ public class MoneyBagController {
         return moneyBagService.getTransactionsById(clientId);
     }
     // localhost:8083/MoneyBag/getTransactionsById?clientId=1
+
+    // Get all transactions and transaction lines by client id
+    @CrossOrigin
+    @GetMapping("getTransactionsCombined")
+    public List<TransactionCombined> getTransactionsCombined(int clientId) {
+        return moneyBagService.getTransactionsCombined(clientId);
+    }
+    // localhost:8083/MoneyBag/getTransactionsCombined?clientId=1
+
+
 
     //Get all income, one client
     @CrossOrigin
@@ -124,28 +137,57 @@ public class MoneyBagController {
     }
 
 
-    // Get planner by id
-    @CrossOrigin
-    @GetMapping("getPlannerById")
-    public List<Planner> getPlannerById(int id) {
-        return moneyBagService.getPlannerById(id);
-    }
-    // localhost:8083/MoneyBag/getPlannerById?id=1
 
-    // Insert default planner lines
+    // Get planner out by id
     @CrossOrigin
-    @PostMapping("insertDefaultPlannerById")
-    public void insertDefaultPlannerById(int clientId) {
-        moneyBagService.insertDefaultPlannerById(clientId);
+    @GetMapping("getPlannerOutById")
+    public List<PlannerOut> getPlannerOutById(int clientId) {
+        return moneyBagService.getPlannerOutById(clientId);
     }
-    // localhost:8083/MoneyBag/insertDefaultPlannerById?clientId=1
+    // localhost:8083/MoneyBag/getPlannerOutById?id=1
 
-    // Update planner by id
+    // Get planner in by id
     @CrossOrigin
-    @PutMapping("updatePlannerById")
-    public void updatePlannerById(@RequestBody PlannerCreator plannerCreator) {
-        moneyBagService.updatePlannerById(plannerCreator);
+    @GetMapping("getPlannerInById")
+    public List<PlannerIn> getPlannerInById(int clientId) {
+        return moneyBagService.getPlannerInById(clientId);
     }
-    // localhost:8083/MoneyBag/updatePlannerById?id=1
+    // localhost:8083/MoneyBag/getPlannerInById?id=1
+
+
+    // Insert default planner out lines
+    @CrossOrigin
+    @PostMapping("insertDefaultPlannerOutById")
+    public void insertDefaultPlannerOutById(int clientId) {
+        moneyBagService.insertDefaultPlannerOutById(clientId);
+    }
+    // localhost:8083/MoneyBag/insertDefaultPlannerOutById?clientId=1
+
+    // Insert default planner in lines
+    @CrossOrigin
+    @PostMapping("insertDefaultPlannerInById")
+    public void insertDefaultPlannerInById(int clientId) {
+        moneyBagService.insertDefaultPlannerInById(clientId);
+    }
+    // localhost:8083/MoneyBag/insertDefaultPlannerInById?clientId=1
+
+
+    // Update planner out by id
+    @CrossOrigin
+    @PutMapping("updatePlannerOutById")
+    public void updatePlannerOutById(@RequestBody PlannerOutCreator plannerOutCreator, int clientId) {
+        moneyBagService.updatePlannerOutById(plannerOutCreator, clientId);
+    }
+    // localhost:8083/MoneyBag/updatePlannerOutById?clientId=1
+
+    // Update planner in by id
+    @CrossOrigin
+    @PutMapping("updatePlannerInById")
+    public void updatePlannerInById(@RequestBody PlannerInCreator plannerInCreator, int clientId) {
+        moneyBagService.updatePlannerInById(plannerInCreator, clientId);
+    }
+    // localhost:8083/MoneyBag/updatePlannerInById?clientId=1
 
 }
+
+
