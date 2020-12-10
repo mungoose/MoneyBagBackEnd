@@ -2,7 +2,11 @@ package com.example.moneybag.service;
 
 import com.example.moneybag.classes.*;
 import com.example.moneybag.repository.*;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,11 +29,57 @@ public class MoneyBagService {
     private GoalSetterRepository goalSetterRepository;
     @Autowired
     private PlannerRepository plannerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private String tokenGenerator(String userName) {
+        Date now = new Date();
+        JwtBuilder builder = Jwts.builder()
+                .setExpiration(new Date(now.getTime() + 1000 * 60 * 60 * 24))
+                .setIssuedAt(now)
+                .setIssuer("issuer")
+                .signWith(SignatureAlgorithm.HS256, "secret")
+                .claim("username", userName);
+        String jwt = builder.compact();
+        return jwt;
+    }
+
+    public String validate(Login login) {
+        String encodedPassword = clientsRepository.askPassword(login.getUserName());
+        boolean isValidate = passwordEncoder.matches(login.getPassword(), encodedPassword);
+        String token;
+        if (isValidate) {
+            token = tokenGenerator(login.getUserName());
+        }
+        else {
+            throw new RuntimeException("Ei õnnestunud");
+        }
+        return token;
+    }
+
+    public String encodedPassword(String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        return encodedPassword;
+    }
+
+
+
+    public Integer getIdByUserName(String userName) {
+        return clientsRepository.getIdByUserName(userName);
+    }
+
 
 
     // Add client
     public void addClient(Client client) {
-        clientsRepository.addClient(client);
+        String firstName = client.getFirstName();
+        String lastName = client.getLastName();
+        BigDecimal balance = client.getBalance().ZERO;
+        String userName = client.getUserName();
+        String password = encodedPassword(client.getPassword());
+        int clientId = clientsRepository.addClient(firstName, lastName, balance, userName, password);
+        insertDefaultPlannerOutById(clientId);
+        insertDefaultPlannerInById(clientId);
     }
 
 
@@ -305,6 +355,5 @@ public class MoneyBagService {
             plannerRepository.insertPlannerInById(plannerIn);
         }
     }
-
 
 }
